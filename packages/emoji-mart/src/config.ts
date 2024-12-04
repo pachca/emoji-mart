@@ -36,7 +36,7 @@ export function init(options, { caller } = {}) {
     }))
 
   if (options) {
-    _init(options)
+    return _init(options).then(() => promise)
   } else if (caller && !initialized) {
     console.warn(
       `\`${caller}\` requires data to be initialized first. Promise will be pending until \`init\` is called.`,
@@ -47,8 +47,6 @@ export function init(options, { caller } = {}) {
 }
 
 async function _init(props) {
-  initialized = true
-
   let { emojiVersion, set, locale } = props
   emojiVersion || (emojiVersion = PickerProps.emojiVersion.value)
   set || (set = PickerProps.set.value)
@@ -252,6 +250,7 @@ async function _init(props) {
     SearchIndex.reset()
   }
 
+  initialized = true
   initCallback()
 }
 
