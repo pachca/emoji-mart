@@ -9,6 +9,9 @@
     "url": "git+https://github.com/pachca/emoji-mart.git",
     "directory": "packages/emoji-mart"
   },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/@pachca"
+  },
   "source": "src/index.ts",
   "types": "dist/index.d.ts",
   "main": "dist/main.js",
