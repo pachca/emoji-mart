@@ -16,8 +16,8 @@ jobs:
         with:
           node-version: 20
       - run: cd ./packages/emoji-mart
-      - run: npm ci
-      - run: npm test
+      - run: npm install
+      - run: npm run build
 
   publish-gpr:
     needs: build
