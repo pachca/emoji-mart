@@ -32,10 +32,6 @@ export default class Picker extends Component {
     return {
       skin: Store.get('skin') || props.skin,
       theme: this.initTheme(props.theme),
-      ignoreCustomInFrequentlyUsed:
-        props.ignoreCustomInFrequentlyUsed !== undefined
-          ? props.ignoreCustomInFrequentlyUsed
-          : false,
     }
   }
 
@@ -187,10 +183,6 @@ export default class Picker extends Component {
       let row = addRow(rows, category)
 
       for (let emoji of category.emojis) {
-        if (this.props.ignoreCustomInFrequentlyUsed && !emoji.unified) {
-          continue
-        }
-
         if (row.length == this.getPerLine()) {
           row = addRow(rows, category)
         }
@@ -763,6 +755,8 @@ export default class Picker extends Component {
     const native = emojiSkin.native
     const selected = deepEqual(this.state.pos, pos)
     const key = pos.concat(emoji.id).join('')
+
+    if (!this.props.custom && !native) return null
 
     return (
       <PureInlineComponent key={key} {...{ selected, skin, size }}>
