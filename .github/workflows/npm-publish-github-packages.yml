@@ -19,9 +19,13 @@ jobs:
         with:
           node-version: 20
           registry-url: https://npm.pkg.github.com/
+      - name: Create .npmrc
+        run: |
+          echo "@pachca/emoji-mart:registry=https://npm.pkg.github.com" > .npmrc
+          echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" >> .npmrc
       - run: npm install -g yarn
       - run: yarn install
       - run: yarn run build
-      - run: yarn run publish
+      - run: yarn workspace @pachca/emoji-mart publish --non-interactive
         env:
           NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
