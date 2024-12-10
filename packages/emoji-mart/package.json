@@ -10,7 +10,7 @@
     "directory": "packages/emoji-mart"
   },
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com/@pachca"
+    "registry": "https://npm.pkg.github.com"
   },
   "source": "src/index.ts",
   "types": "dist/index.d.ts",
