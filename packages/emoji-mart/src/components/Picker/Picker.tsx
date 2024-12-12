@@ -868,8 +868,33 @@ export default class Picker extends Component {
   }
 
   renderSearchResults() {
+    const { categories } = Data
     const { searchResults } = this.state
     if (!searchResults) return null
+
+    const filteredSearchResults = searchResults.map((row) => {
+      const customEmojis = categories.find((c) => c.id === 'custom')
+
+      const filteredRow = row.filter((emoji) => {
+        const findedEmoji = SearchIndex.get(emoji)
+        const isDefaultEmoji = Boolean(findedEmoji.version)
+
+        if (!this.props.custom && !isDefaultEmoji) {
+          return false
+        }
+
+        if (!isDefaultEmoji && customEmojis) {
+          const hasCustomEmoji = customEmojis.emojis.some(
+            (emoji) => emoji.id === findedEmoji.id,
+          )
+          return hasCustomEmoji
+        }
+
+        return true
+      })
+
+      return filteredRow
+    })
 
     return (
       <div class="category" ref={this.refs.search}>
@@ -877,21 +902,21 @@ export default class Picker extends Component {
           {I18n.categories.search}
         </div>
         <div>
-          {!searchResults.length ? (
+          {!filteredSearchResults.length ? (
             <div class={`padding-small align-${this.dir[0]}`}>
               {this.props.onAddCustomEmoji && (
                 <a onClick={this.props.onAddCustomEmoji}>{I18n.add_custom}</a>
               )}
             </div>
           ) : (
-            searchResults.map((row, i) => {
+            filteredSearchResults.map((row, i) => {
               return (
                 <div class="flex">
                   {row.map((emoji, ii) => {
                     return this.renderEmojiButton(emoji, {
                       pos: [i, ii],
                       posinset: i * this.props.perLine + ii + 1,
-                      grid: searchResults,
+                      grid: filteredSearchResults,
                     })
                   })}
                 </div>
