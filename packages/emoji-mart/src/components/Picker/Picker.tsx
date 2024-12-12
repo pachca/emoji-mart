@@ -154,6 +154,18 @@ export default class Picker extends Component {
 
     this.refs.categories = new Map()
 
+    const filteredCategories = categories.reduce((acc, category) => {
+      if (category.id === 'frequent' && !this.props.custom) {
+        category.emojis = category.emojis.filter((emoji) => {
+          const findedEmoji = SearchIndex.get(emoji)
+          return Boolean(findedEmoji.version)
+        })
+      }
+      acc.push(category)
+
+      return acc
+    }, [])
+
     const navKey = Data.categories.map((category) => category.id).join(',')
     if (this.navKey && this.navKey != navKey) {
       this.refs.scroll.current && (this.refs.scroll.current.scrollTop = 0)
@@ -755,8 +767,6 @@ export default class Picker extends Component {
     const native = emojiSkin.native
     const selected = deepEqual(this.state.pos, pos)
     const key = pos.concat(emoji.id).join('')
-
-    if (!this.props.custom && !native) return null
 
     return (
       <PureInlineComponent key={key} {...{ selected, skin, size }}>
