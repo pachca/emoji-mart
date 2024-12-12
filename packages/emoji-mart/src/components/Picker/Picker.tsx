@@ -155,10 +155,22 @@ export default class Picker extends Component {
     this.refs.categories = new Map()
 
     const filteredCategories = categories.reduce((acc, category) => {
-      if (category.id === 'frequent' && !this.props.custom) {
+      if (category.id === 'frequent') {
         category.emojis = category.emojis.filter((emoji) => {
           const findedEmoji = SearchIndex.get(emoji)
-          return Boolean(findedEmoji.version)
+          const customEmojis = categories.find((c) => c.id === 'custom')
+
+          const isDefaultEmoji = Boolean(findedEmoji.version)
+
+          if (!this.props.custom) {
+            return isDefaultEmoji
+          } else if (!isDefaultEmoji) {
+            const hasCustomEmoji = customEmojis.emojis.some(
+              (emoji) => emoji.id === findedEmoji.id,
+            )
+            return hasCustomEmoji
+          }
+          return true
         })
       }
       acc.push(category)
