@@ -47,8 +47,20 @@ async function search(value, { maxResults, caller } = {}) {
 
     for (const emoji of pool) {
       if (!emoji.search) continue
-      const score = emoji.search.indexOf(`,${value}`)
-      if (score == -1) continue
+      const keywords = emoji.search.split(',')
+      let score = 0
+      const hasKeyword = keywords.some((keyword, index) => {
+        if (keyword === value) {
+          score = 0
+          return true
+        }
+        if (keyword.includes(value)) {
+          score += index
+          return true
+        }
+        return false
+      })
+      if (!hasKeyword) continue
 
       results.push(emoji)
       scores[emoji.id] || (scores[emoji.id] = 0)
